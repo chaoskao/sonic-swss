@@ -21,138 +21,129 @@ extern sai_acl_api_t *sai_acl_api;
 
 using namespace std;
 
-
 const map<CrmResourceType, string> crmResTypeNameMap =
-{
-    { CrmResourceType::CRM_IPV4_ROUTE, "IPV4_ROUTE" },
-    { CrmResourceType::CRM_IPV6_ROUTE, "IPV6_ROUTE" },
-    { CrmResourceType::CRM_IPV4_NEXTHOP, "IPV4_NEXTHOP" },
-    { CrmResourceType::CRM_IPV6_NEXTHOP, "IPV6_NEXTHOP" },
-    { CrmResourceType::CRM_IPV4_NEIGHBOR, "IPV4_NEIGHBOR" },
-    { CrmResourceType::CRM_IPV6_NEIGHBOR, "IPV6_NEIGHBOR" },
-    { CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER, "NEXTHOP_GROUP_MEMBER" },
-    { CrmResourceType::CRM_NEXTHOP_GROUP, "NEXTHOP_GROUP" },
-    { CrmResourceType::CRM_ACL_TABLE, "ACL_TABLE" },
-    { CrmResourceType::CRM_ACL_GROUP, "ACL_GROUP" },
-    { CrmResourceType::CRM_ACL_ENTRY, "ACL_ENTRY" },
-    { CrmResourceType::CRM_ACL_COUNTER, "ACL_COUNTER" },
-    { CrmResourceType::CRM_FDB_ENTRY, "FDB_ENTRY" }
-};
+    {
+        {CrmResourceType::CRM_IPV4_ROUTE, "IPV4_ROUTE"},
+        {CrmResourceType::CRM_IPV6_ROUTE, "IPV6_ROUTE"},
+        {CrmResourceType::CRM_IPV4_NEXTHOP, "IPV4_NEXTHOP"},
+        {CrmResourceType::CRM_IPV6_NEXTHOP, "IPV6_NEXTHOP"},
+        {CrmResourceType::CRM_IPV4_NEIGHBOR, "IPV4_NEIGHBOR"},
+        {CrmResourceType::CRM_IPV6_NEIGHBOR, "IPV6_NEIGHBOR"},
+        {CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER, "NEXTHOP_GROUP_MEMBER"},
+        {CrmResourceType::CRM_NEXTHOP_GROUP, "NEXTHOP_GROUP"},
+        {CrmResourceType::CRM_ACL_TABLE, "ACL_TABLE"},
+        {CrmResourceType::CRM_ACL_GROUP, "ACL_GROUP"},
+        {CrmResourceType::CRM_ACL_ENTRY, "ACL_ENTRY"},
+        {CrmResourceType::CRM_ACL_COUNTER, "ACL_COUNTER"},
+        {CrmResourceType::CRM_FDB_ENTRY, "FDB_ENTRY"}};
 
 const map<CrmResourceType, uint32_t> crmResSaiAvailAttrMap =
-{
-    { CrmResourceType::CRM_IPV4_ROUTE, SAI_SWITCH_ATTR_AVAILABLE_IPV4_ROUTE_ENTRY },
-    { CrmResourceType::CRM_IPV6_ROUTE, SAI_SWITCH_ATTR_AVAILABLE_IPV6_ROUTE_ENTRY },
-    { CrmResourceType::CRM_IPV4_NEXTHOP, SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEXTHOP_ENTRY },
-    { CrmResourceType::CRM_IPV6_NEXTHOP, SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEXTHOP_ENTRY },
-    { CrmResourceType::CRM_IPV4_NEIGHBOR, SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEIGHBOR_ENTRY },
-    { CrmResourceType::CRM_IPV6_NEIGHBOR, SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEIGHBOR_ENTRY },
-    { CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER, SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_MEMBER_ENTRY },
-    { CrmResourceType::CRM_NEXTHOP_GROUP, SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_ENTRY },
-    { CrmResourceType::CRM_ACL_TABLE, SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE },
-    { CrmResourceType::CRM_ACL_GROUP, SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE_GROUP },
-    { CrmResourceType::CRM_ACL_ENTRY, SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_ENTRY },
-    { CrmResourceType::CRM_ACL_COUNTER, SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_COUNTER },
-    { CrmResourceType::CRM_FDB_ENTRY, SAI_SWITCH_ATTR_AVAILABLE_FDB_ENTRY }
-};
+    {
+        {CrmResourceType::CRM_IPV4_ROUTE, SAI_SWITCH_ATTR_AVAILABLE_IPV4_ROUTE_ENTRY},
+        {CrmResourceType::CRM_IPV6_ROUTE, SAI_SWITCH_ATTR_AVAILABLE_IPV6_ROUTE_ENTRY},
+        {CrmResourceType::CRM_IPV4_NEXTHOP, SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEXTHOP_ENTRY},
+        {CrmResourceType::CRM_IPV6_NEXTHOP, SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEXTHOP_ENTRY},
+        {CrmResourceType::CRM_IPV4_NEIGHBOR, SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEIGHBOR_ENTRY},
+        {CrmResourceType::CRM_IPV6_NEIGHBOR, SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEIGHBOR_ENTRY},
+        {CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER, SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_MEMBER_ENTRY},
+        {CrmResourceType::CRM_NEXTHOP_GROUP, SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_ENTRY},
+        {CrmResourceType::CRM_ACL_TABLE, SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE},
+        {CrmResourceType::CRM_ACL_GROUP, SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE_GROUP},
+        {CrmResourceType::CRM_ACL_ENTRY, SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_ENTRY},
+        {CrmResourceType::CRM_ACL_COUNTER, SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_COUNTER},
+        {CrmResourceType::CRM_FDB_ENTRY, SAI_SWITCH_ATTR_AVAILABLE_FDB_ENTRY}};
 
 const map<string, CrmResourceType> crmThreshTypeResMap =
-{
-    { "ipv4_route_threshold_type", CrmResourceType::CRM_IPV4_ROUTE },
-    { "ipv6_route_threshold_type", CrmResourceType::CRM_IPV6_ROUTE },
-    { "ipv4_nexthop_threshold_type", CrmResourceType::CRM_IPV4_NEXTHOP },
-    { "ipv6_nexthop_threshold_type", CrmResourceType::CRM_IPV6_NEXTHOP },
-    { "ipv4_neighbor_threshold_type", CrmResourceType::CRM_IPV4_NEIGHBOR },
-    { "ipv6_neighbor_threshold_type", CrmResourceType::CRM_IPV6_NEIGHBOR },
-    { "nexthop_group_member_threshold_type", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER },
-    { "nexthop_group_threshold_type", CrmResourceType::CRM_NEXTHOP_GROUP },
-    { "acl_table_threshold_type", CrmResourceType::CRM_ACL_TABLE },
-    { "acl_group_threshold_type", CrmResourceType::CRM_ACL_GROUP },
-    { "acl_entry_threshold_type", CrmResourceType::CRM_ACL_ENTRY },
-    { "acl_counter_threshold_type", CrmResourceType::CRM_ACL_COUNTER },
-    { "fdb_entry_threshold_type", CrmResourceType::CRM_FDB_ENTRY }
-};
+    {
+        {"ipv4_route_threshold_type", CrmResourceType::CRM_IPV4_ROUTE},
+        {"ipv6_route_threshold_type", CrmResourceType::CRM_IPV6_ROUTE},
+        {"ipv4_nexthop_threshold_type", CrmResourceType::CRM_IPV4_NEXTHOP},
+        {"ipv6_nexthop_threshold_type", CrmResourceType::CRM_IPV6_NEXTHOP},
+        {"ipv4_neighbor_threshold_type", CrmResourceType::CRM_IPV4_NEIGHBOR},
+        {"ipv6_neighbor_threshold_type", CrmResourceType::CRM_IPV6_NEIGHBOR},
+        {"nexthop_group_member_threshold_type", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER},
+        {"nexthop_group_threshold_type", CrmResourceType::CRM_NEXTHOP_GROUP},
+        {"acl_table_threshold_type", CrmResourceType::CRM_ACL_TABLE},
+        {"acl_group_threshold_type", CrmResourceType::CRM_ACL_GROUP},
+        {"acl_entry_threshold_type", CrmResourceType::CRM_ACL_ENTRY},
+        {"acl_counter_threshold_type", CrmResourceType::CRM_ACL_COUNTER},
+        {"fdb_entry_threshold_type", CrmResourceType::CRM_FDB_ENTRY}};
 
 const map<string, CrmResourceType> crmThreshLowResMap =
-{
-    {"ipv4_route_low_threshold", CrmResourceType::CRM_IPV4_ROUTE },
-    {"ipv6_route_low_threshold", CrmResourceType::CRM_IPV6_ROUTE },
-    {"ipv4_nexthop_low_threshold", CrmResourceType::CRM_IPV4_NEXTHOP },
-    {"ipv6_nexthop_low_threshold", CrmResourceType::CRM_IPV6_NEXTHOP },
-    {"ipv4_neighbor_low_threshold", CrmResourceType::CRM_IPV4_NEIGHBOR },
-    {"ipv6_neighbor_low_threshold", CrmResourceType::CRM_IPV6_NEIGHBOR },
-    {"nexthop_group_member_low_threshold", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER },
-    {"nexthop_group_low_threshold", CrmResourceType::CRM_NEXTHOP_GROUP },
-    {"acl_table_low_threshold", CrmResourceType::CRM_ACL_TABLE },
-    {"acl_group_low_threshold", CrmResourceType::CRM_ACL_GROUP },
-    {"acl_entry_low_threshold", CrmResourceType::CRM_ACL_ENTRY },
-    {"acl_counter_low_threshold", CrmResourceType::CRM_ACL_COUNTER },
-    {"fdb_entry_low_threshold", CrmResourceType::CRM_FDB_ENTRY },
+    {
+        {"ipv4_route_low_threshold", CrmResourceType::CRM_IPV4_ROUTE},
+        {"ipv6_route_low_threshold", CrmResourceType::CRM_IPV6_ROUTE},
+        {"ipv4_nexthop_low_threshold", CrmResourceType::CRM_IPV4_NEXTHOP},
+        {"ipv6_nexthop_low_threshold", CrmResourceType::CRM_IPV6_NEXTHOP},
+        {"ipv4_neighbor_low_threshold", CrmResourceType::CRM_IPV4_NEIGHBOR},
+        {"ipv6_neighbor_low_threshold", CrmResourceType::CRM_IPV6_NEIGHBOR},
+        {"nexthop_group_member_low_threshold", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER},
+        {"nexthop_group_low_threshold", CrmResourceType::CRM_NEXTHOP_GROUP},
+        {"acl_table_low_threshold", CrmResourceType::CRM_ACL_TABLE},
+        {"acl_group_low_threshold", CrmResourceType::CRM_ACL_GROUP},
+        {"acl_entry_low_threshold", CrmResourceType::CRM_ACL_ENTRY},
+        {"acl_counter_low_threshold", CrmResourceType::CRM_ACL_COUNTER},
+        {"fdb_entry_low_threshold", CrmResourceType::CRM_FDB_ENTRY},
 };
 
 const map<string, CrmResourceType> crmThreshHighResMap =
-{
-    {"ipv4_route_high_threshold", CrmResourceType::CRM_IPV4_ROUTE },
-    {"ipv6_route_high_threshold", CrmResourceType::CRM_IPV6_ROUTE },
-    {"ipv4_nexthop_high_threshold", CrmResourceType::CRM_IPV4_NEXTHOP },
-    {"ipv6_nexthop_high_threshold", CrmResourceType::CRM_IPV6_NEXTHOP },
-    {"ipv4_neighbor_high_threshold", CrmResourceType::CRM_IPV4_NEIGHBOR },
-    {"ipv6_neighbor_high_threshold", CrmResourceType::CRM_IPV6_NEIGHBOR },
-    {"nexthop_group_member_high_threshold", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER },
-    {"nexthop_group_high_threshold", CrmResourceType::CRM_NEXTHOP_GROUP },
-    {"acl_table_high_threshold", CrmResourceType::CRM_ACL_TABLE },
-    {"acl_group_high_threshold", CrmResourceType::CRM_ACL_GROUP },
-    {"acl_entry_high_threshold", CrmResourceType::CRM_ACL_ENTRY },
-    {"acl_counter_high_threshold", CrmResourceType::CRM_ACL_COUNTER },
-    {"fdb_entry_high_threshold", CrmResourceType::CRM_FDB_ENTRY }
-};
+    {
+        {"ipv4_route_high_threshold", CrmResourceType::CRM_IPV4_ROUTE},
+        {"ipv6_route_high_threshold", CrmResourceType::CRM_IPV6_ROUTE},
+        {"ipv4_nexthop_high_threshold", CrmResourceType::CRM_IPV4_NEXTHOP},
+        {"ipv6_nexthop_high_threshold", CrmResourceType::CRM_IPV6_NEXTHOP},
+        {"ipv4_neighbor_high_threshold", CrmResourceType::CRM_IPV4_NEIGHBOR},
+        {"ipv6_neighbor_high_threshold", CrmResourceType::CRM_IPV6_NEIGHBOR},
+        {"nexthop_group_member_high_threshold", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER},
+        {"nexthop_group_high_threshold", CrmResourceType::CRM_NEXTHOP_GROUP},
+        {"acl_table_high_threshold", CrmResourceType::CRM_ACL_TABLE},
+        {"acl_group_high_threshold", CrmResourceType::CRM_ACL_GROUP},
+        {"acl_entry_high_threshold", CrmResourceType::CRM_ACL_ENTRY},
+        {"acl_counter_high_threshold", CrmResourceType::CRM_ACL_COUNTER},
+        {"fdb_entry_high_threshold", CrmResourceType::CRM_FDB_ENTRY}};
 
 const map<string, CrmThresholdType> crmThreshTypeMap =
-{
-    { "percentage", CrmThresholdType::CRM_PERCENTAGE },
-    { "used", CrmThresholdType::CRM_USED },
-    { "free", CrmThresholdType::CRM_FREE }
-};
+    {
+        {"percentage", CrmThresholdType::CRM_PERCENTAGE},
+        {"used", CrmThresholdType::CRM_USED},
+        {"free", CrmThresholdType::CRM_FREE}};
 
 const map<string, CrmResourceType> crmAvailCntsTableMap =
-{
-    { "crm_stats_ipv4_route_available", CrmResourceType::CRM_IPV4_ROUTE },
-    { "crm_stats_ipv6_route_available", CrmResourceType::CRM_IPV6_ROUTE },
-    { "crm_stats_ipv4_nexthop_available", CrmResourceType::CRM_IPV4_NEXTHOP },
-    { "crm_stats_ipv6_nexthop_available", CrmResourceType::CRM_IPV6_NEXTHOP },
-    { "crm_stats_ipv4_neighbor_available", CrmResourceType::CRM_IPV4_NEIGHBOR },
-    { "crm_stats_ipv6_neighbor_available", CrmResourceType::CRM_IPV6_NEIGHBOR },
-    { "crm_stats_nexthop_group_member_available", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER },
-    { "crm_stats_nexthop_group_available", CrmResourceType::CRM_NEXTHOP_GROUP },
-    { "crm_stats_acl_table_available", CrmResourceType::CRM_ACL_TABLE },
-    { "crm_stats_acl_group_available", CrmResourceType::CRM_ACL_GROUP },
-    { "crm_stats_acl_entry_available", CrmResourceType::CRM_ACL_ENTRY },
-    { "crm_stats_acl_counter_available", CrmResourceType::CRM_ACL_COUNTER },
-    { "crm_stats_fdb_entry_available", CrmResourceType::CRM_FDB_ENTRY }
-};
+    {
+        {"crm_stats_ipv4_route_available", CrmResourceType::CRM_IPV4_ROUTE},
+        {"crm_stats_ipv6_route_available", CrmResourceType::CRM_IPV6_ROUTE},
+        {"crm_stats_ipv4_nexthop_available", CrmResourceType::CRM_IPV4_NEXTHOP},
+        {"crm_stats_ipv6_nexthop_available", CrmResourceType::CRM_IPV6_NEXTHOP},
+        {"crm_stats_ipv4_neighbor_available", CrmResourceType::CRM_IPV4_NEIGHBOR},
+        {"crm_stats_ipv6_neighbor_available", CrmResourceType::CRM_IPV6_NEIGHBOR},
+        {"crm_stats_nexthop_group_member_available", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER},
+        {"crm_stats_nexthop_group_available", CrmResourceType::CRM_NEXTHOP_GROUP},
+        {"crm_stats_acl_table_available", CrmResourceType::CRM_ACL_TABLE},
+        {"crm_stats_acl_group_available", CrmResourceType::CRM_ACL_GROUP},
+        {"crm_stats_acl_entry_available", CrmResourceType::CRM_ACL_ENTRY},
+        {"crm_stats_acl_counter_available", CrmResourceType::CRM_ACL_COUNTER},
+        {"crm_stats_fdb_entry_available", CrmResourceType::CRM_FDB_ENTRY}};
 
 const map<string, CrmResourceType> crmUsedCntsTableMap =
-{
-    { "crm_stats_ipv4_route_used", CrmResourceType::CRM_IPV4_ROUTE },
-    { "crm_stats_ipv6_route_used", CrmResourceType::CRM_IPV6_ROUTE },
-    { "crm_stats_ipv4_nexthop_used", CrmResourceType::CRM_IPV4_NEXTHOP },
-    { "crm_stats_ipv6_nexthop_used", CrmResourceType::CRM_IPV6_NEXTHOP },
-    { "crm_stats_ipv4_neighbor_used", CrmResourceType::CRM_IPV4_NEIGHBOR },
-    { "crm_stats_ipv6_neighbor_used", CrmResourceType::CRM_IPV6_NEIGHBOR },
-    { "crm_stats_nexthop_group_member_used", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER },
-    { "crm_stats_nexthop_group_used", CrmResourceType::CRM_NEXTHOP_GROUP },
-    { "crm_stats_acl_table_used", CrmResourceType::CRM_ACL_TABLE },
-    { "crm_stats_acl_group_used", CrmResourceType::CRM_ACL_GROUP },
-    { "crm_stats_acl_entry_used", CrmResourceType::CRM_ACL_ENTRY },
-    { "crm_stats_acl_counter_used", CrmResourceType::CRM_ACL_COUNTER },
-    { "crm_stats_fdb_entry_used", CrmResourceType::CRM_FDB_ENTRY }
-};
+    {
+        {"crm_stats_ipv4_route_used", CrmResourceType::CRM_IPV4_ROUTE},
+        {"crm_stats_ipv6_route_used", CrmResourceType::CRM_IPV6_ROUTE},
+        {"crm_stats_ipv4_nexthop_used", CrmResourceType::CRM_IPV4_NEXTHOP},
+        {"crm_stats_ipv6_nexthop_used", CrmResourceType::CRM_IPV6_NEXTHOP},
+        {"crm_stats_ipv4_neighbor_used", CrmResourceType::CRM_IPV4_NEIGHBOR},
+        {"crm_stats_ipv6_neighbor_used", CrmResourceType::CRM_IPV6_NEIGHBOR},
+        {"crm_stats_nexthop_group_member_used", CrmResourceType::CRM_NEXTHOP_GROUP_MEMBER},
+        {"crm_stats_nexthop_group_used", CrmResourceType::CRM_NEXTHOP_GROUP},
+        {"crm_stats_acl_table_used", CrmResourceType::CRM_ACL_TABLE},
+        {"crm_stats_acl_group_used", CrmResourceType::CRM_ACL_GROUP},
+        {"crm_stats_acl_entry_used", CrmResourceType::CRM_ACL_ENTRY},
+        {"crm_stats_acl_counter_used", CrmResourceType::CRM_ACL_COUNTER},
+        {"crm_stats_fdb_entry_used", CrmResourceType::CRM_FDB_ENTRY}};
 
-CrmOrch::CrmOrch(DBConnector *db, string tableName):
-    Orch(db, tableName),
-    m_countersDb(new DBConnector(COUNTERS_DB, DBConnector::DEFAULT_UNIXSOCKET, 0)),
-    m_countersCrmTable(new Table(m_countersDb.get(), COUNTERS_CRM_TABLE)),
-    m_timer(new SelectableTimer(timespec { .tv_sec = CRM_POLLING_INTERVAL_DEFAULT, .tv_nsec = 0 }))
+CrmOrch::CrmOrch(DBConnector *db, string tableName) : Orch(db, tableName),
+                                                      m_countersDb(new DBConnector(COUNTERS_DB, DBConnector::DEFAULT_UNIXSOCKET, 0)),
+                                                      m_countersCrmTable(new Table(m_countersDb.get(), COUNTERS_CRM_TABLE)),
+                                                      m_timer(new SelectableTimer(timespec{.tv_sec = CRM_POLLING_INTERVAL_DEFAULT, .tv_nsec = 0}))
 {
     SWSS_LOG_ENTER();
 
@@ -172,11 +163,10 @@ CrmOrch::CrmOrch(DBConnector *db, string tableName):
     m_timer->start();
 }
 
-CrmOrch::CrmResourceEntry::CrmResourceEntry(string name, CrmThresholdType thresholdType, uint32_t lowThreshold, uint32_t highThreshold):
-    name(name),
-    thresholdType(thresholdType),
-    lowThreshold(lowThreshold),
-    highThreshold(highThreshold)
+CrmOrch::CrmResourceEntry::CrmResourceEntry(string name, CrmThresholdType thresholdType, uint32_t lowThreshold, uint32_t highThreshold) : name(name),
+                                                                                                                                          thresholdType(thresholdType),
+                                                                                                                                          lowThreshold(lowThreshold),
+                                                                                                                                          highThreshold(highThreshold)
 {
     if ((thresholdType == CrmThresholdType::CRM_PERCENTAGE) && ((lowThreshold > 100) || (highThreshold > 100)))
     {
@@ -187,7 +177,6 @@ CrmOrch::CrmResourceEntry::CrmResourceEntry(string name, CrmThresholdType thresh
     {
         throw runtime_error("CRM low threshold must be less then high threshold");
     }
-
 }
 
 void CrmOrch::doTask(Consumer &consumer)
@@ -226,7 +215,7 @@ void CrmOrch::doTask(Consumer &consumer)
     }
 }
 
-void CrmOrch::handleSetCommand(const string& key, const vector<FieldValueTuple>& data)
+void CrmOrch::handleSetCommand(const string &key, const vector<FieldValueTuple> &data)
 {
     SWSS_LOG_ENTER();
 
@@ -240,7 +229,7 @@ void CrmOrch::handleSetCommand(const string& key, const vector<FieldValueTuple>&
             if (field == CRM_POLLING_INTERVAL)
             {
                 m_pollingInterval = chrono::seconds(to_uint<uint32_t>(value));
-                auto interv = timespec { .tv_sec = (time_t)m_pollingInterval.count(), .tv_nsec = 0 };
+                auto interv = timespec{.tv_sec = (time_t)m_pollingInterval.count(), .tv_nsec = 0};
                 m_timer->setInterval(interv);
                 m_timer->reset();
             }
@@ -271,7 +260,7 @@ void CrmOrch::handleSetCommand(const string& key, const vector<FieldValueTuple>&
                 return;
             }
         }
-        catch (const exception& e)
+        catch (const exception &e)
         {
             SWSS_LOG_ERROR("Failed to parse CRM %s attribute %s error: %s.", key.c_str(), field.c_str(), e.what());
             return;
@@ -342,8 +331,7 @@ void CrmOrch::decCrmAclUsedCounter(CrmResourceType resource, sai_acl_stage_t sta
         {
             for (auto &resourcesMap : m_resourcesMap)
             {
-                if ((resourcesMap.first == (CrmResourceType::CRM_ACL_ENTRY))
-                    || (resourcesMap.first == (CrmResourceType::CRM_ACL_COUNTER)))
+                if ((resourcesMap.first == (CrmResourceType::CRM_ACL_ENTRY)) || (resourcesMap.first == (CrmResourceType::CRM_ACL_COUNTER)))
                 {
                     auto &cntMap = resourcesMap.second.countersMap;
                     for (auto it = cntMap.begin(); it != cntMap.end(); ++it)
@@ -391,6 +379,22 @@ void CrmOrch::decCrmAclTableUsedCounter(CrmResourceType resource, sai_object_id_
     try
     {
         m_resourcesMap.at(resource).countersMap[getCrmAclTableKey(tableId)].usedCounter--;
+        if (resource == CrmResourceType::CRM_ACL_ENTRY || resource == CrmResourceType::CRM_ACL_COUNTER)
+        {
+            auto &cntMap = m_resourcesMap.at(resource).countersMap;
+            for (auto it = cntMap.begin(); it != cntMap.end();)
+            {
+                if (it->second.usedCounter == 0 && it->second.id == tableId)
+                {
+                    it = cntMap.erase(it);
+                    break;
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+        }
     }
     catch (...)
     {
@@ -419,79 +423,79 @@ void CrmOrch::getResAvailableCounters()
 
         switch (attr.id)
         {
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV4_ROUTE_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV6_ROUTE_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEXTHOP_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEXTHOP_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEIGHBOR_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEIGHBOR_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_MEMBER_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_ENTRY:
-            case SAI_SWITCH_ATTR_AVAILABLE_FDB_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV4_ROUTE_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV6_ROUTE_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEXTHOP_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEXTHOP_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV4_NEIGHBOR_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_IPV6_NEIGHBOR_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_MEMBER_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_NEXT_HOP_GROUP_ENTRY:
+        case SAI_SWITCH_ATTR_AVAILABLE_FDB_ENTRY:
+        {
+            sai_status_t status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
+            if (status != SAI_STATUS_SUCCESS)
             {
-                sai_status_t status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
-                if (status != SAI_STATUS_SUCCESS)
-                {
-                    SWSS_LOG_ERROR("Failed to get switch attribute %u , rv:%d", attr.id, status);
-                    break;
-                }
-
-                res.second.countersMap[CRM_COUNTERS_TABLE_KEY].availableCounter = attr.value.u32;
-
+                SWSS_LOG_ERROR("Failed to get switch attribute %u , rv:%d", attr.id, status);
                 break;
             }
 
-            case SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE:
-            case SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE_GROUP:
-            {
-                vector<sai_acl_resource_t> resources(CRM_ACL_RESOURCE_COUNT);
+            res.second.countersMap[CRM_COUNTERS_TABLE_KEY].availableCounter = attr.value.u32;
 
-                attr.value.aclresource.count = CRM_ACL_RESOURCE_COUNT;
+            break;
+        }
+
+        case SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE:
+        case SAI_SWITCH_ATTR_AVAILABLE_ACL_TABLE_GROUP:
+        {
+            vector<sai_acl_resource_t> resources(CRM_ACL_RESOURCE_COUNT);
+
+            attr.value.aclresource.count = CRM_ACL_RESOURCE_COUNT;
+            attr.value.aclresource.list = resources.data();
+            sai_status_t status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
+            if (status == SAI_STATUS_BUFFER_OVERFLOW)
+            {
+                resources.resize(attr.value.aclresource.count);
                 attr.value.aclresource.list = resources.data();
-                sai_status_t status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
-                if (status == SAI_STATUS_BUFFER_OVERFLOW)
-                {
-                    resources.resize(attr.value.aclresource.count);
-                    attr.value.aclresource.list = resources.data();
-                    status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
-                }
+                status = sai_switch_api->get_switch_attribute(gSwitchId, 1, &attr);
+            }
 
+            if (status != SAI_STATUS_SUCCESS)
+            {
+                SWSS_LOG_ERROR("Failed to get switch attribute %u , rv:%d", attr.id, status);
+                break;
+            }
+
+            for (uint32_t i = 0; i < attr.value.aclresource.count; i++)
+            {
+                string key = getCrmAclKey(attr.value.aclresource.list[i].stage, attr.value.aclresource.list[i].bind_point);
+                res.second.countersMap[key].availableCounter = attr.value.aclresource.list[i].avail_num;
+            }
+
+            break;
+        }
+
+        case SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_ENTRY:
+        case SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_COUNTER:
+        {
+            for (auto &cnt : res.second.countersMap)
+            {
+                sai_status_t status = sai_acl_api->get_acl_table_attribute(cnt.second.id, 1, &attr);
                 if (status != SAI_STATUS_SUCCESS)
                 {
-                    SWSS_LOG_ERROR("Failed to get switch attribute %u , rv:%d", attr.id, status);
+                    SWSS_LOG_ERROR("Failed to get ACL table attribute %u , rv:%d", attr.id, status);
                     break;
                 }
 
-                for (uint32_t i = 0; i < attr.value.aclresource.count; i++)
-                {
-                    string key = getCrmAclKey(attr.value.aclresource.list[i].stage, attr.value.aclresource.list[i].bind_point);
-                    res.second.countersMap[key].availableCounter = attr.value.aclresource.list[i].avail_num;
-                }
-
-                break;
+                cnt.second.availableCounter = attr.value.u32;
             }
 
-            case SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_ENTRY:
-            case SAI_ACL_TABLE_ATTR_AVAILABLE_ACL_COUNTER:
-            {
-                for (auto &cnt : res.second.countersMap)
-                {
-                    sai_status_t status = sai_acl_api->get_acl_table_attribute(cnt.second.id, 1, &attr);
-                    if (status != SAI_STATUS_SUCCESS)
-                    {
-                        SWSS_LOG_ERROR("Failed to get ACL table attribute %u , rv:%d", attr.id, status);
-                        break;
-                    }
+            break;
+        }
 
-                    cnt.second.availableCounter = attr.value.u32;
-                }
-
-                break;
-            }
-
-            default:
-                SWSS_LOG_ERROR("Failed to get CRM attribute %u. Unknown attribute.\n", attr.id);
-                return;
+        default:
+            SWSS_LOG_ERROR("Failed to get CRM attribute %u. Unknown attribute.\n", attr.id);
+            return;
         }
     }
 }
@@ -506,7 +510,7 @@ void CrmOrch::updateCrmCountersTable()
         for (const auto &cnt : m_resourcesMap.at(i.second).countersMap)
         {
             FieldValueTuple attr(i.first, to_string(cnt.second.usedCounter));
-            vector<FieldValueTuple> attrs = { attr };
+            vector<FieldValueTuple> attrs = {attr};
             m_countersCrmTable->set(cnt.first, attrs);
         }
     }
@@ -517,7 +521,7 @@ void CrmOrch::updateCrmCountersTable()
         for (const auto &cnt : m_resourcesMap.at(i.second).countersMap)
         {
             FieldValueTuple attr(i.first, to_string(cnt.second.availableCounter));
-            vector<FieldValueTuple> attrs = { attr };
+            vector<FieldValueTuple> attrs = {attr};
             m_countersCrmTable->set(cnt.first, attrs);
         }
     }
@@ -545,20 +549,20 @@ void CrmOrch::checkCrmThresholds()
 
             switch (res.thresholdType)
             {
-                case CrmThresholdType::CRM_PERCENTAGE:
-                    utilization = percentageUtil;
-                    threshType = "TH_PERCENTAGE";
-                    break;
-                case CrmThresholdType::CRM_USED:
-                    utilization = cnt.usedCounter;
-                    threshType = "TH_USED";
-                    break;
-                case CrmThresholdType::CRM_FREE:
-                    utilization = cnt.availableCounter;
-                    threshType = "TH_FREE";
-                    break;
-                default:
-                    throw runtime_error("Unknown threshold type for CRM resource");
+            case CrmThresholdType::CRM_PERCENTAGE:
+                utilization = percentageUtil;
+                threshType = "TH_PERCENTAGE";
+                break;
+            case CrmThresholdType::CRM_USED:
+                utilization = cnt.usedCounter;
+                threshType = "TH_USED";
+                break;
+            case CrmThresholdType::CRM_FREE:
+                utilization = cnt.availableCounter;
+                threshType = "TH_FREE";
+                break;
+            default:
+                throw runtime_error("Unknown threshold type for CRM resource");
             }
 
             if ((utilization >= res.highThreshold) && (res.exceededLogCounter < CRM_EXCEEDED_MSG_MAX))
@@ -576,45 +580,44 @@ void CrmOrch::checkCrmThresholds()
                 res.exceededLogCounter = 0;
             }
         } // end of counters loop
-    } // end of resources loop
+    }     // end of resources loop
 }
-
 
 string CrmOrch::getCrmAclKey(sai_acl_stage_t stage, sai_acl_bind_point_type_t bindPoint)
 {
     string key = "ACL_STATS";
 
-    switch(stage)
+    switch (stage)
     {
-        case SAI_ACL_STAGE_INGRESS:
-            key += ":INGRESS";
-            break;
-        case SAI_ACL_STAGE_EGRESS:
-            key += ":EGRESS";
-            break;
-        default:
-            return "";
+    case SAI_ACL_STAGE_INGRESS:
+        key += ":INGRESS";
+        break;
+    case SAI_ACL_STAGE_EGRESS:
+        key += ":EGRESS";
+        break;
+    default:
+        return "";
     }
 
-    switch(bindPoint)
+    switch (bindPoint)
     {
-        case SAI_ACL_BIND_POINT_TYPE_PORT:
-            key += ":PORT";
-            break;
-        case SAI_ACL_BIND_POINT_TYPE_LAG:
-            key += ":LAG";
-            break;
-        case SAI_ACL_BIND_POINT_TYPE_VLAN:
-            key += ":VLAN";
-            break;
-        case SAI_ACL_BIND_POINT_TYPE_ROUTER_INTERFACE:
-            key += ":RIF";
-            break;
-        case SAI_ACL_BIND_POINT_TYPE_SWITCH:
-            key += ":SWITCH";
-            break;
-        default:
-            return "";
+    case SAI_ACL_BIND_POINT_TYPE_PORT:
+        key += ":PORT";
+        break;
+    case SAI_ACL_BIND_POINT_TYPE_LAG:
+        key += ":LAG";
+        break;
+    case SAI_ACL_BIND_POINT_TYPE_VLAN:
+        key += ":VLAN";
+        break;
+    case SAI_ACL_BIND_POINT_TYPE_ROUTER_INTERFACE:
+        key += ":RIF";
+        break;
+    case SAI_ACL_BIND_POINT_TYPE_SWITCH:
+        key += ":SWITCH";
+        break;
+    default:
+        return "";
     }
 
     return key;
@@ -623,6 +626,7 @@ string CrmOrch::getCrmAclKey(sai_acl_stage_t stage, sai_acl_bind_point_type_t bi
 string CrmOrch::getCrmAclTableKey(sai_object_id_t id)
 {
     std::stringstream ss;
-    ss << "ACL_TABLE_STATS:" << "0x" << std::hex << id;
+    ss << "ACL_TABLE_STATS:"
+       << "0x" << std::hex << id;
     return ss.str();
 }
