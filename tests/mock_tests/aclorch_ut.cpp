@@ -115,7 +115,7 @@ namespace aclorch_test
               { "SAI_ACL_TABLE_ATTR_FIELD_TCP_FLAGS", "true" },
               { "SAI_ACL_TABLE_ATTR_FIELD_ACL_RANGE_TYPE", "2:SAI_ACL_RANGE_TYPE_L4_DST_PORT_RANGE,SAI_ACL_RANGE_TYPE_L4_SRC_PORT_RANGE" },
               { "SAI_ACL_TABLE_ATTR_ACL_STAGE", "SAI_ACL_STAGE_INGRESS" } });
-        SaiAttributeList attr_list(SAI_OBJECT_TYPE_ACL_TABLE, v, false);
+        saimeta::SaiAttributeList attr_list(SAI_OBJECT_TYPE_ACL_TABLE, v, false);
 
         ASSERT_TRUE(Check::AttrListEq(SAI_OBJECT_TYPE_ACL_TABLE, res->attr_list, attr_list));
     }
@@ -413,7 +413,7 @@ namespace aclorch_test
                                             gNeighOrch, gRouteOrch);
         }
 
-        shared_ptr<SaiAttributeList> getAclTableAttributeList(sai_object_type_t objecttype, const AclTable &acl_table)
+        shared_ptr<saimeta::SaiAttributeList> getAclTableAttributeList(sai_object_type_t objecttype, const AclTable &acl_table)
         {
             vector<swss::FieldValueTuple> fields;
 
@@ -454,10 +454,10 @@ namespace aclorch_test
                 fields.push_back({ "SAI_ACL_TABLE_ATTR_ACL_STAGE", "SAI_ACL_STAGE_EGRESS" });
             }
 
-            return shared_ptr<SaiAttributeList>(new SaiAttributeList(objecttype, fields, false));
+            return shared_ptr<saimeta::SaiAttributeList>(new saimeta::SaiAttributeList(objecttype, fields, false));
         }
 
-        shared_ptr<SaiAttributeList> getAclRuleAttributeList(sai_object_type_t objecttype, const AclRule &acl_rule, sai_object_id_t acl_table_oid, const AclTable &acl_table)
+        shared_ptr<saimeta::SaiAttributeList> getAclRuleAttributeList(sai_object_type_t objecttype, const AclRule &acl_rule, sai_object_id_t acl_table_oid, const AclTable &acl_table)
         {
             vector<swss::FieldValueTuple> fields;
 
@@ -484,7 +484,7 @@ namespace aclorch_test
                     ;
             }
 
-            return shared_ptr<SaiAttributeList>(new SaiAttributeList(objecttype, fields, false));
+            return shared_ptr<saimeta::SaiAttributeList>(new saimeta::SaiAttributeList(objecttype, fields, false));
         }
 
         bool validateAclRule(const string acl_rule_sid, const AclRule &acl_rule, sai_object_id_t acl_table_oid, const AclTable &acl_table)
